@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>My Phonetic</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/site.css">
+    </head>
+    <body>
+        <div id="main_container">
+            <h1>My Phonetic</h1>
+            <div id="ops_pannel">
+                <div>
+                    <label for="songs_select">Select Song:</label>
+                    <select name="songs_select" id="songs_select">
+                        <option value="" selected="selected"></option>
+                    </select>
+                    <audio id="mp3_player" loop="loop"></audio>
+                </div>
+                <div id="segments_panel">
+                    <ol id="ol_segments">
+                        <li></li>
+                    </ol>
+                    <div id="time_position"></div>
+                </div>
+            </div>
+            <div id="content">
+                <input type="text" id="title" class="title" placeholder="Input Title Here">
+                <div id="body_wrapper">
+                    <ul id="lines_before" class="lines"></ul>
+                    <div id="current_line_wrapper">
+                        <input id="input" readonly="readonly" placeholder="Input Phonetic Here">
+                        <label id="input_label" for="input">></label>
+                    </div>
+                    <ul id="lines_after" class="lines"></ul>
+                </div>
+            </div>
+        </div>
+        <script src="js/jquery-3.1.1.js"></script>
+        <script src="js/site.js"></script>
+    </body>
+</html>
