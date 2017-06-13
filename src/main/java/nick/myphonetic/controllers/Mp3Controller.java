@@ -1,38 +1,28 @@
-package nick.myphonetic;
+package nick.myphonetic.controllers;
 
-import org.springframework.http.HttpEntity;
+import nick.myphonetic.persistance.DataStorage;
 import org.springframework.http.HttpRange;
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.*;
-import java.util.stream.*;
+import java.util.List;
 
-@RestController
-public class SongController {
+@Controller
+public class Mp3Controller {
 
-    @Value("${songs.path}")
-    private String songsPath;
+    @Resource
+    private DataStorage dataStorage;
 
-    @RequestMapping("/songs")
-    public List<String> listSongs() {
-        return  Arrays.asList(new File(songsPath).listFiles())
-            .stream()
-            .map(f->f.getName())
-            .filter(f->f.endsWith(".mp3"))
-            .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @RequestMapping("/song/{name}.mp3")
+    @GetMapping("/mp3/{name}")
     public void getSong(@PathVariable("name") String name, @RequestHeader(value="range", defaultValue="bytes=0-") String requestRange, HttpServletResponse response)
             throws IOException {
 
-        File file = new File(songsPath + "/" + name + ".mp3");
+        File file = dataStorage.getMp3FilePathForSong(name);
         if (!file.exists()) {
             response.setStatus(404);
             return;
@@ -58,5 +48,16 @@ public class SongController {
                 StreamUtils.copyRange(in, out, start, end);
             }
         }
+    }
+
+    @PostMapping("/mp3/{name}")
+    public String uploadMp3(@PathVariable("name") String name, @RequestParam("mp3") MultipartFile mp3) throws IOException {
+        File localMp3 = dataStorage.getMp3FilePathForSong(name);
+        try (OutputStream out = new FileOutputStream(localMp3)) {
+            try (InputStream in = mp3.getInputStream()) {
+                StreamUtils.copy(in, out);
+            }
+        }
+        return "redirect:/";
     }
 }
