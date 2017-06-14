@@ -27,8 +27,8 @@ public class Lyric {
 
     public static class Line {
         private List<String> phonetics = new ArrayList<>();
-        private int start;
-        private int end;
+        private float start;
+        private float end;
 
         public List<String> getPhonetics() {
             return phonetics;
@@ -38,15 +38,15 @@ public class Lyric {
             this.phonetics = phonetics;
         }
 
-        public int getStart() {
+        public float getStart() {
             return start;
         }
 
-        public void setStart(int start) {
+        public void setStart(float start) {
             this.start = start;
         }
 
-        public int getEnd() {
+        public float getEnd() {
             return end;
         }
 

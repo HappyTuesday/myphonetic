@@ -76,7 +76,7 @@ public class DataStorage {
     }
 
     public File getMp3FilePathForSong(String songName) {
-        return new File(dataRootPath, toDataFileName(songName));
+        return new File(mp3RootPath, toMp3FileName(songName));
     }
 
     private  static boolean checkIfValidDataFile(String fileName) {

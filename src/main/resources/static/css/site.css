@@ -3,12 +3,91 @@ html{
     background-color: #faf8fa;
 }
 
-#main_container{
-    margin: 0 auto;
-    max-width: 50em;
+ul, ol, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-#content{
+.title {
+    text-align: center;
+}
+
+.songs-wrapper h2 {
+    margin-top: 0;
+}
+
+.main-container:after {
+    clear: both;
+}
+
+.songs-wrapper {
+    float: left;
+    min-width: 10em;
+}
+
+.songs-list {
+    border: 1px solid gray;
+    padding: 0.5em;
+}
+
+.songs-list>li {
+    border-bottom: 1px dashed lightgray;
+    margin: 0.25em 0;
+}
+
+.songs-list>.current h3 {
+    background-color: lightgreen;
+}
+
+.songs-list h3 {
+    margin: 0;
+    padding: 0;
+    cursor: hand;
+    font-size: 18px;
+}
+
+.player-wrapper {
+    width: 50em;
+    margin: 0 auto;
+}
+
+.segments-panel {
+    position: relative;
+    border: 1px solid gray;
+    background-color: #ecf0f1;
+    height: 1.25em;
+    border-radius: 0.1em;
+}
+
+.progress-bar, .progress-bar>li, .time-position {
+    height: 100%;
+}
+
+.progress-bar>li {
+    position: absolute;
+    height: 20px;
+    background-color: #98d09a;
+    border: 0px solid #539422;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-collapse: collapse;
+}
+
+.loop .progress-bar>li.current{
+    background-color: #539422;
+}
+
+.time-position{
+    position: absolute;
+    width: 0;
+    border-left: 1px solid yellow;
+    height: 100%;
+    top: 0;
+}
+
+.lyric-editor {
+    margin-top: 1em;
     border: 1px solid gray;
     padding: 1em;
     border-radius: 0.3em;
@@ -16,17 +95,42 @@ html{
     background-color: white;
 }
 
-#body_wrapper, #input {
+.lyric-editor {
     font-family: monaco;
     font-size: 16px;
     font-weight: bold;
+    outline: none;
 }
 
-#current_line_wrapper {
+.lines-viewer>li {
+    border: 0px solid transparent;
+    border-bottom-width: 1px;
+}
+
+.lines-viewer>.normal:empty::after {
+    content: "...";
+    color: lightgray;
+    font-weight: normal;
+}
+
+.lines-viewer>.current:empty::after {
+    content: "Input Phonetics Here";
+    color: lightgray;
+    font-weight: normal;
+}
+
+.lines-viewer>.current {
     position: relative;
+    cursor: text;
+    border: 0px solid lightgray;
+    border-bottom-width: 1px;
 }
 
-#input_label {
+.lyric-editor:active .current, .lyric-editor:hover .current, .lyric-editor:focus .current{
+    border-color: lightblue;
+}
+
+.lines-viewer>.current:before {
     position: absolute;
     bottom: 0;
     left: -0.75em;
@@ -34,86 +138,6 @@ html{
     padding-bottom: 1px;
 }
 
-.lines {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.lines>li {
-    border: 0px solid transparent;
-    border-bottom-width: 1px;
-}
-
-.lines>li:empty::after {
-    content: "...";
-    color: lightgray;
-    font-weight: normal;
-}
-
-#input {
-    cursor: text;
-    display: block;
-    width: 100%;
-    border: 0px solid lightgray;
-    border-bottom-width: 1px;
-    padding: 0;
-}
-
-#input:active, #input:hover, #input:focus{
-    border-color: lightblue;
-}
-
-.title{
-    color: gray;
-    font-weight: bold;
-    font-size: 32px;
-    border: 0px solid lightgray;
-    text-align: center;
-    width: 90%;
-    margin: 0.5em auto 0.5em auto;
-    display: block;
-    outline: none;
-}
-
-.title:empty {
-    border-bottom-width: 1px;
-}
-
-#ops_pannel>div{
-    margin: 0.5em 0;
-}
-
-#segments_panel{
-    position: relative;
-}
-
-#ol_segments{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border: 1px solid gray;
-    background-color: #ecf0f1;
-}
-
-#ol_segments li{
-    list-style: none;
-    display: inline-block;
-    height: 20px;
-    background-color: #98d09a;
-    border: 0px solid #539422;
-    border-left-width: 1px;
-    border-right-width: 1px;
-}
-
-#ol_segments li.current{
-    background-color: #539422;
-}
-
-#time_position{
-    position: absolute;
-    width: 0;
-    border-left: 1px solid yellow;
-    height: 100%;
-    top: 0;
+.lines-viewer span {
+    margin: 0 2px;
 }

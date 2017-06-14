@@ -5,28 +5,36 @@
         <link rel="stylesheet" href="css/site.css">
     </head>
     <body>
-        <div id="main_container">
-            <h1 id="title">My Phonetic</h1>
-            <div id="songs_list_wrapper">
+        <h1 class="title">My Phonetic</h1>
+        <div class="main-container">
+            <div class="songs-wrapper">
                 <h2>Songs</h2>
-                <ol id="songs_list"></ol>
+                <ol class="songs-list" data-bind="foreach: {data: songs, as: 'songName'}">
+                    <li data-bind="click: $parent.set_current_song.bind($parent), css: $parent.current_song().name == songName ? 'current': 'normal'">
+                        <h3 data-bind="text: $data"></h3>
+                        <!-- ko with: $parent -->
+                        <!-- ko if: current_song().name == songName -->
+                        <ul data-bind="foreach: current_song().lyrics">
+                            <li data-bind="text: $index, click: $parent.set_current_lyric.bind($parent)"></li>
+                        </ul>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                    </li>
+                </ol>
             </div>
-            <div id="player_wrapper">
-                <div id="ops_pannel">
-                    <audio id="mp3_player" loop="loop"></audio>
-                    <div id="segments_panel">
-                        <ol id="ol_segments">
-                            <li></li>
-                        </ol>
-                        <div id="time_position"></div>
+            <div class="player-wrapper" data-bind="with: player">
+                <div class="ops-pannel">
+                    <audio id="mp3_player" data-bind="event: {timeupdate: timeupdate.bind($data), durationchange: durationchange.bind($data)}" loop="loop"></audio>
+                    <div class="segments-panel" data-bind="css: loop() ? 'loop': 'no-loop'">
+                        <ul id="progress_bar" class="progress-bar" data-bind="foreach: lines">
+                            <li data-bind="style: {left: left, right: right}, css: player.index() == $index() ? 'current' : 'normal'"></li>
+                        </ul>
+                        <div class="time-position" data-bind="style: {marginLeft: progress_pointer_left}"></div>
                     </div>
                 </div>
-                <div id="lyric_editor">
-                    <ul id="lines_viewer">
-                        <li id="current_line_wrapper">
-                            <input id="input" readonly="readonly" placeholder="Input Phonetic Here">
-                            <label id="input_label" for="input">></label>
-                        </li>
+                <div class="lyric-editor" tabindex="0" data-bind="event: {keydown: keydown.bind($data), keypress: keypress.bind($data)}">
+                    <ul class="lines-viewer" data-bind="foreach: lines">
+                        <li data-bind="css: player.index() == $index() ? 'current' : 'normal', foreach: phonetics"><span data-bind="text: $data"></span></li>
                     </ul>
                 </div>
             </div>
@@ -34,6 +42,7 @@
         <script src="js/jquery-3.1.1.js"></script>
         <script src="js/knockout-3.4.2.js"></script>
         <script src="js/phonetic_map.js"></script>
+        <script src="js/song_player.js"></script>
         <script src="js/site.js"></script>
     </body>
 </html>
