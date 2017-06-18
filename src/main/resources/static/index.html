@@ -2,44 +2,133 @@
     <head>
         <title>My Phonetic</title>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.css">
         <link rel="stylesheet" href="css/site.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <h1 class="title">My Phonetic</h1>
-        <div class="main-container">
-            <div class="songs-wrapper">
-                <h2>Songs</h2>
-                <ol class="songs-list" data-bind="foreach: {data: songs, as: 'songName'}">
-                    <li data-bind="click: $parent.set_current_song.bind($parent), css: $parent.current_song().name == songName ? 'current': 'normal'">
-                        <h3 data-bind="text: $data"></h3>
-                        <!-- ko with: $parent -->
-                        <!-- ko if: current_song().name == songName -->
-                        <ul data-bind="foreach: current_song().lyrics">
-                            <li data-bind="text: $index, click: $parent.set_current_lyric.bind($parent)"></li>
-                        </ul>
-                        <!-- /ko -->
-                        <!-- /ko -->
-                    </li>
-                </ol>
-            </div>
-            <div class="player-wrapper" data-bind="with: player">
-                <div class="ops-pannel">
-                    <audio id="mp3_player" data-bind="event: {timeupdate: timeupdate.bind($data), durationchange: durationchange.bind($data)}" loop="loop"></audio>
-                    <div class="segments-panel" data-bind="css: loop() ? 'loop': 'no-loop'">
-                        <ul id="progress_bar" class="progress-bar" data-bind="foreach: lines">
-                            <li data-bind="style: {left: left, right: right}, css: player.index() == $index() ? 'current' : 'normal'"></li>
-                        </ul>
-                        <div class="time-position" data-bind="style: {marginLeft: progress_pointer_left}"></div>
-                    </div>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="/" class="navbar-brand">My Phonetic</a>
                 </div>
-                <div class="lyric-editor" tabindex="0" data-bind="event: {keydown: keydown.bind($data), keypress: keypress.bind($data)}">
-                    <ul class="lines-viewer" data-bind="foreach: lines">
-                        <li data-bind="css: player.index() == $index() ? 'current' : 'normal', foreach: phonetics"><span data-bind="text: $data"></span></li>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/upload.html">Upload</a>
+                        </li>
+                        <li>
+                            <a href="/about.html">About</a>
+                        </li>
                     </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar" data-bind="foreach: songs">
+                        <li data-bind="css: {active: active()}">
+                            <a data-bind="text: name, click: handle_click.bind($data)"></a>
+                            <i class="glyphicon glyphicon-trash" data-bind="click: remove.bind($data)"></i>
+                            <ul class="nav nav-second" data-bind="css: {loaded: loaded()}">
+                                <!-- ko foreach: lyrics -->
+                                <li data-bind="css: {active: active()}">
+                                    <a data-bind="click: handle_click.bind($data)">
+                                        <span data-bind="text: id"></span><span data-bind="if: drafts().length > 0">*</span>
+                                    </a>
+                                    <i class="glyphicon glyphicon-trash" data-bind="click: remove.bind($data)"></i>
+                                </li>
+                                <!-- /ko -->
+                                <li>
+                                    <a data-bind="click: create_lyric.bind($data)">Create New Lyric</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" data-bind="with: player">
+                    <div data-bind="css: lyric() ? 'show' : 'hide'">
+                        <h1 data-bind="text: lyric() ? lyric().song.name : 'Select a Song'"></h1>
+
+                        <div class="player-panel">
+                            <audio id="mp3_player" loop="loop"></audio>
+                            <div class="segments-panel" data-bind="css: {loop: loop}">
+                                <ul id="progress_bar" class="player-progress-bar" data-bind="foreach: lines">
+                                    <li data-bind="style: {left: left, width: width}, css: {current: player.index() == $index()}"></li>
+                                </ul>
+                                <div class="time-position" data-bind="style: {left: progress_pointer_left}"></div>
+                            </div>
+                        </div>
+
+                        <div class="status-panel">
+                    <span data-bind="ifnot: last_key_appended">
+                        <label>waiting: </label><span data-bind="text: last_key"></span>
+                    </span>
+                            <span>
+                        <label>line: </label><span data-bind="text: index() + 1"></span>/<span data-bind="text: lines().length"></span>
+                    </span>
+                            <span>
+                        <label>time: </label><span data-bind="text: position_time"></span>
+                    </span>
+                        </div>
+
+                        <div id="lyric_editor" class="lyric-editor" tabindex="0">
+                            <ul class="lines-viewer" data-bind="foreach: lines">
+                                <li data-bind="css: {current: player.index() == $index()}, click: $parent.handle_line_click.bind($parent), foreach: phonetics"><span data-bind="text: $data"></span></li>
+                            </ul>
+                        </div>
+
+                        <div class="player-ops-panel btn-toolbar">
+                            <div class="btn-group btn-group-sm">
+                                <button id="btn_prev_seconds" class="btn btn-default"><<</button>
+                                <button id="btn_toggle_pause" class="btn btn-default" data-bind="text: playing() ? 'pause': 'play'"></button>
+                                <button id="btn_next_seconds" class="btn btn-default">>></button>
+                                <button id="btn_toggle_loop" class="btn btn-default" data-bind="css: {active: loop()}">loop</button>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button id="btn_split_line" class="btn btn-default">split line</button>
+                                <button id="btn_merge_line" class="btn btn-default">merge line</button>
+                                <button id="btn_start_line" class="btn btn-default">start line</button>
+                                <button id="btn_end_line" class="btn btn-default">end line</button>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button id="btn_prev_line" class="btn btn-default">prev line</button>
+                                <button id="btn_next_line" class="btn btn-default">next line</button>
+                                <button id="btn_delete_line" class="btn btn-default">delete line</button>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button id="btn_save_lyric_new" class="btn btn-default">save as new</button>
+                                <button id="btn_save_lyric" class="btn btn-default">save</button>
+                                <button id="btn_delete_lyric" class="btn btn-default">delete lyric</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-bind="css: lyric() ? 'hide' : 'show'">
+                        <div class="jumbotron">
+                            <h1>Welcome <b>My Phonetic</b></h1>
+
+                            <p>
+                                This is a phonetic input web site. With the ability of typing phonetics from your keyboards
+                                while an English song is playing, you can record the entire phonetics of the lyrics of the
+                                song you are listening. We also provide a set of keyboard short-cuts to allow you split the
+                                song into several pieces, called lines. You can loop a line, which means the player will only
+                                play a range of the song in loop.
+                            </p>
+                            <p>
+                                Please Select a song from the left panel to start your English learning. Enjoin yourself.
+                            </p>
+                            <p>
+                                Nick Liu &copy; 2017
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <script src="js/jquery-3.1.1.js"></script>
+        <script src="js/bootstrap.js"></script>
         <script src="js/knockout-3.4.2.js"></script>
         <script src="js/phonetic_map.js"></script>
         <script src="js/song_player.js"></script>

@@ -25,7 +25,7 @@ public class SongController {
     }
 
     @DeleteMapping("/song/{name}")
-    public void deleteSongInfo(@PathVariable("name") String songName, @RequestParam(value = "deleteMp3", defaultValue = "false") boolean deleteMp3) throws IOException {
+    public void deleteSongInfo(@PathVariable("name") String songName, @RequestParam(value = "deleteMp3", defaultValue = "true") boolean deleteMp3) throws IOException {
         dataStorage.deleteSong(songName, deleteMp3);
     }
 }

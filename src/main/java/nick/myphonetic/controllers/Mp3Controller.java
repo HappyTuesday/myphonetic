@@ -50,8 +50,8 @@ public class Mp3Controller {
         }
     }
 
-    @PostMapping("/mp3/{name}")
-    public String uploadMp3(@PathVariable("name") String name, @RequestParam("mp3") MultipartFile mp3) throws IOException {
+    @PostMapping("/mp3/upload")
+    public String uploadMp3(@RequestParam("name") String name, @RequestParam("mp3") MultipartFile mp3) throws IOException {
         File localMp3 = dataStorage.getMp3FilePathForSong(name);
         try (OutputStream out = new FileOutputStream(localMp3)) {
             try (InputStream in = mp3.getInputStream()) {

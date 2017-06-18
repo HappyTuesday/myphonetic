@@ -9,76 +9,125 @@ ul, ol, li {
     list-style: none;
 }
 
-.title {
-    text-align: center;
+.show {
+    display: block;
 }
 
-.songs-wrapper h2 {
-    margin-top: 0;
+.hide {
+    display: none;
 }
 
-.main-container:after {
-    clear: both;
+body {
+    padding-top: 50px;
 }
 
-.songs-wrapper {
-    float: left;
-    min-width: 10em;
-}
-
-.songs-list {
-    border: 1px solid gray;
-    padding: 0.5em;
-}
-
-.songs-list>li {
-    border-bottom: 1px dashed lightgray;
-    margin: 0.25em 0;
-}
-
-.songs-list>.current h3 {
-    background-color: lightgreen;
-}
-
-.songs-list h3 {
-    margin: 0;
-    padding: 0;
+.nav .glyphicon-trash {
+    display: none;
+    position: absolute;
+    right: 0.5em;
+    top: 0em;
     cursor: hand;
-    font-size: 18px;
 }
 
-.player-wrapper {
-    width: 50em;
-    margin: 0 auto;
+.nav .glyphicon-trash:hover {
+    font-weight: bold;
+}
+
+.nav-sidebar>li>.glyphicon {
+    line-height: 40px;
+}
+
+.nav-second>li>.glyphicon {
+    line-height: 31px;
+}
+
+.nav>li:hover>.glyphicon {
+    display: block;
+}
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+}
+
+.nav-sidebar {
+     margin-right: -21px; /* 20px padding + 1px border */
+     margin-bottom: 20px;
+     margin-left: -20px;
+ }
+
+.nav-sidebar a {
+    cursor: hand;
+}
+
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+    font-weight: bold;
+}
+
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+    background-color: #428bca;
+}
+
+.nav-second:not(.loaded) {
+    display: none;
+}
+
+.nav-sidebar > .active .nav-second > .active > a,
+.nav-sidebar > .active .nav-second > .active > a:hover
+.nav-sidebar > .active .nav-second > .active > a:focus {
+    color: #3c3c3c;
+    background-color: #e3e3e3;
+}
+
+.nav-second > li > a {
+    padding: 8px 5px 8px 40px;
+    font-size: 0.8em;
 }
 
 .segments-panel {
     position: relative;
     border: 1px solid gray;
-    background-color: #ecf0f1;
-    height: 1.25em;
+    background-color: #fbfcff;
     border-radius: 0.1em;
 }
 
-.progress-bar, .progress-bar>li, .time-position {
-    height: 100%;
+.player-progress-bar {
+    width: 100%;
+    cursor: hand;
 }
 
-.progress-bar>li {
-    position: absolute;
+.player-progress-bar, .player-progress-bar>li, .time-position {
     height: 20px;
-    background-color: #98d09a;
-    border: 0px solid #539422;
+}
+
+.player-progress-bar>li {
+    position: absolute;
+    background-color: rgba(0, 196, 255, 0.3);
+    border: 0px solid rgba(0, 196, 255, 5);
     border-left-width: 1px;
     border-right-width: 1px;
     border-collapse: collapse;
 }
 
-.loop .progress-bar>li.current{
-    background-color: #539422;
+.loop .player-progress-bar>li.current{
+    background-color: rgba(0, 196, 255, 1);
 }
 
-.time-position{
+.time-position {
     position: absolute;
     width: 0;
     border-left: 1px solid yellow;
@@ -86,16 +135,18 @@ ul, ol, li {
     top: 0;
 }
 
+.status-panel {
+    text-align: right;
+    margin-top: 0.5em;
+}
+
 .lyric-editor {
-    margin-top: 1em;
+    margin: 0.5em 0 1em 0;
     border: 1px solid gray;
     padding: 1em;
     border-radius: 0.3em;
     box-shadow: 1px 1px 1px gray;
     background-color: white;
-}
-
-.lyric-editor {
     font-family: monaco;
     font-size: 16px;
     font-weight: bold;
@@ -105,9 +156,10 @@ ul, ol, li {
 .lines-viewer>li {
     border: 0px solid transparent;
     border-bottom-width: 1px;
+    cursor: hand;
 }
 
-.lines-viewer>.normal:empty::after {
+.lines-viewer>:not(.current):empty::after {
     content: "...";
     color: lightgray;
     font-weight: normal;

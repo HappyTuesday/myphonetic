@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>My Phonetic</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/site.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="/" class="navbar-brand">My Phonetic</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/upload.html">Upload</a>
+                </li>
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <h1>Upload a MP3 file</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/mp3/upload" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="mp3">MP3 File</label>
+                    <input type="file" id="mp3" name="mp3">
+                    <p class="help-block">A file with extension .mp3</p>
+                </div>
+                <div class="form-group">
+                    <label for="name">Song Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Song Name">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="js/jquery-3.1.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script>
+    $("#mp3").change(function(){
+        var mp3name = $(this).val().replace(/^.*\\/, "").replace(/\..*$/, "").replace(/^.*- */, "");
+        $("#name").val(mp3name);
+    });
+</script>
+</body>

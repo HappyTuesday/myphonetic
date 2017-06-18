@@ -1,11 +1,11 @@
 package nick.myphonetic.persistance;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import nick.myphonetic.models.SongInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +19,8 @@ public class DataStorage {
 
     @Value("${data.root.path}")
     private String dataRootPath;
+
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public List<String> getSongNames() {
         Stream<String> songsInStorageFolder = Arrays.stream(new File(dataRootPath).listFiles())
@@ -38,8 +40,8 @@ public class DataStorage {
         File dataFile = getDataFilePathForSong(songName);
         if (dataFile.exists()) {
             try (InputStream fs = new FileInputStream(dataFile)) {
-                try (XMLDecoder decoder = new XMLDecoder(fs)) {
-                    SongInfo songInfo = (SongInfo) decoder.readObject();
+                try (InputStreamReader reader = new InputStreamReader(fs)) {
+                    SongInfo songInfo = gson.fromJson(reader, SongInfo.class);
                     songInfo.setName(songName);
                     return songInfo;
                 }
@@ -54,8 +56,8 @@ public class DataStorage {
 
     public void saveSongInfo(SongInfo songInfo) throws IOException {
         try (OutputStream fs = new FileOutputStream(getDataFilePathForSong(songInfo.getName()))) {
-            try (XMLEncoder encoder = new XMLEncoder(fs)) {
-                encoder.writeObject(songInfo);
+            try (OutputStreamWriter writer = new OutputStreamWriter(fs)) {
+                gson.toJson(songInfo, writer);
             }
         }
     }
@@ -80,15 +82,15 @@ public class DataStorage {
     }
 
     private  static boolean checkIfValidDataFile(String fileName) {
-        return fileName.endsWith(".xml");
+        return fileName.endsWith(".json");
     }
 
     private static String toSongName(String fileName) {
-        return fileName.replaceFirst("\\.xml$", "");
+        return fileName.replaceFirst("\\.json$", "");
     }
 
     private static String toDataFileName(String songName) {
-        return songName + ".xml";
+        return songName + ".json";
     }
 
     private static String toMp3FileName(String songName) {

@@ -8,37 +8,51 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class LyricController {
     @Resource
     DataStorage dataStorage;
 
-    @GetMapping("/song/{name}/lyric/{index}")
-    public Lyric getLyric(@PathVariable("name") String songName, @PathVariable("index") int lyricIndex) throws IOException {
-        return dataStorage.loadSongInfo(songName).getLyrics().get(lyricIndex);
+    @GetMapping("/song/{name}/lyric/{id}")
+    public Lyric getLyric(@PathVariable("name") String songName, @PathVariable("id") int id) throws IOException {
+        return dataStorage.loadSongInfo(songName).getLyrics()
+                .stream()
+                .filter(l->l.getId() == id)
+                .findFirst().get();
     }
 
     @PutMapping("/song/{name}/lyric")
-    public void addLyric(@PathVariable("name") String songName, Lyric lyric) throws IOException {
+    public Lyric addLyric(@PathVariable("name") String songName, @RequestBody Lyric lyric) throws IOException {
         lyric.setCreateDate(new Date());
         SongInfo songInfo = dataStorage.loadSongInfo(songName);
+        int id = songInfo.getLyrics().stream().reduce(0, (a,x)->Integer.max(a, x.getId()), (x,y)->y) + 1;
+        lyric.setId(id);
         songInfo.getLyrics().add(lyric);
         dataStorage.saveSongInfo(songInfo);
+        return lyric;
     }
 
-    @DeleteMapping("/song/{name}/lyric/{index}")
-    public void deleteLyric(@PathVariable("name") String songName, @PathVariable("index") int lyricIndex) throws IOException {
+    @DeleteMapping("/song/{name}/lyric/{id}")
+    public void deleteLyric(@PathVariable("name") String songName, @PathVariable("id") int id) throws IOException {
         SongInfo songInfo = dataStorage.loadSongInfo(songName);
-        songInfo.getLyrics().remove(lyricIndex);
+        songInfo.getLyrics().removeIf(l->l.getId() == id);
         dataStorage.saveSongInfo(songInfo);
     }
 
-    @PostMapping("/song/{name}/lyric/{index}")
-    public void updateLyric(@PathVariable("name") String songName, @PathVariable("index") int lyricIndex, Lyric lyric) throws IOException {
+    @PostMapping("/song/{name}/lyric/{id}")
+    public Lyric updateLyric(@PathVariable("name") String songName, @PathVariable("id") int id, @RequestBody Lyric lyric) throws IOException {
         lyric.setCreateDate(new Date());
         SongInfo songInfo = dataStorage.loadSongInfo(songName);
-        songInfo.getLyrics().set(lyricIndex, lyric);
+        List<Lyric> ls = songInfo.getLyrics();
+        for (int i = 0; i < ls.size(); i++) {
+            if (ls.get(i).getId() == id) {
+                lyric.setId(id);
+                ls.set(i, lyric);
+            }
+        }
         dataStorage.saveSongInfo(songInfo);
+        return lyric;
     }
 }

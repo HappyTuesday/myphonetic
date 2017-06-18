@@ -5,9 +5,18 @@ import java.util.Date;
 import java.util.List;
 
 public class Lyric {
+    private int id;
 
     private List<Line> lines = new ArrayList<>();
     private Date createDate;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public List<Line> getLines() {
         return lines;
@@ -50,7 +59,7 @@ public class Lyric {
             return end;
         }
 
-        public void setEnd(int end) {
+        public void setEnd(float end) {
             this.end = end;
         }
     }

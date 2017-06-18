@@ -1,0 +1,66 @@
+{
+  "name": "Yesterday Once More",
+  "mp3url": "/mp3/Yesterday Once More",
+  "lyrics": [
+    {
+      "id": 1,
+      "lines": [],
+      "createDate": "Jun 18, 2017 3:06:23 PM"
+    },
+    {
+      "id": 2,
+      "lines": [
+        {
+          "phonetics": [
+            "d"
+          ],
+          "start": 0.0,
+          "end": 3.300566
+        },
+        {
+          "phonetics": [
+            "b",
+            "d",
+            "f"
+          ],
+          "start": 3.300566,
+          "end": 4.493336
+        },
+        {
+          "phonetics": [
+            "ʌ",
+            "s",
+            "d"
+          ],
+          "start": 4.493336,
+          "end": 7.70854
+        },
+        {
+          "phonetics": [
+            "f",
+            "ʌ",
+            "s"
+          ],
+          "start": 7.70854,
+          "end": 10.434588
+        },
+        {
+          "phonetics": [
+            "d",
+            "d"
+          ],
+          "start": 10.434588,
+          "end": 12.282496
+        },
+        {
+          "phonetics": [
+            "d"
+          ],
+          "start": 12.282496,
+          "end": 238.52408
+        }
+      ],
+      "createDate": "Jun 18, 2017 3:59:51 PM"
+    }
+  ]
+}
